@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Witty Compliment Joker</title>
+    
+    <!-- Google Fonts: Outfit (Headings) & DM Sans (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS Variables: Earthy Organic Matcha Palette --- */
+        :root {
+            --matcha-dark: #2B4522;
+            --matcha-darker: #1C2E16;
+            --matcha-mid: #466D35;
+            --matcha-vibrant: #79A354; 
+            --matcha-light: #A2C579;
+            --matcha-glow: rgba(121, 163, 84, 0.4);
+            
+            --warm-sand: #F9F6F0;
+            --deep-slate: #1A211A; 
+            --terracotta: #E07A5F;
+            --pebble-gray: #D2D6D3;
+            
+            --transition-speed: 0.4s;
+        }
+
+        /* --- Global Reset & Typography --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #aabda4 0%, #8fa68a 50%, #9bb096 100%);
+            color: var(--deep-slate);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 0;
+            cursor: default;
+        }
+
+        /* Tech/Cyber Flair: Subtle dot grid overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+            background-size: 24px 24px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- NEW: Interactive Water Ripples & Code Swirls --- */
+        .water-ripple {
+            position: fixed;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+            animation: rippleAnim 2s ease-out forwards; /* Slower, more pronounced wave */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.2); /* Wave effect */
+            z-index: -2;
+        }
+
+        @keyframes rippleAnim {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0.9; border-width: 4px; }
+            100% { transform: translate(-50%, -50%) scale(8); opacity: 0; border-width: 1px; } /* Larger scale ripples */
+        }
+
+        .code-swirl {
+            position: fixed;
+            pointer-events: none;
+            font-family: 'Outfit', monospace;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px; /* ONE FONT SIZE LARGER */
+            font-weight: 700;
+            z-index: -2;
+            animation: swirlAnim 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+            white-space: nowrap; /* Prevent snippets from wrapping */
+        }
+
+        @keyframes swirlAnim {
+            0% { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(0.5); }
+            100% { opacity: 0; transform: var(--end-transform) rotate(var(--end-rotation)) scale(1.5); }
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--deep-slate);
+        }
+
+        /* --- Accessibility: Focus States --- */
+        *:focus-visible {
+            outline: 3px solid var(--matcha-vibrant);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        /* --- Layout & Card Container --- */
+        .app-container {
+            width: 100%;
+            max-width: 850px; 
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 2.5rem 3rem 4rem 3rem; 
+            box-shadow: 0 16px 50px rgba(28, 46, 22, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem; 
+            position: relative;
+        }
+
+        /* Cyber Flair: "System Online" Status Dot */
+        .app-container::before {
+            content: '';
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 8px;
+            height: 8px;
+            background-color: var(--matcha-vibrant);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--matcha-vibrant);
+            opacity: 0.9;
+        }
+
+        /* --- Title & Subtitle Redesign --- */
+        header .app-title {
+            font-size: 3rem; 
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--matcha-dark) 0%, var(--matcha-mid) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header .app-subtitle {
+            font-size: 1.25rem; 
+            color: var(--matcha-vibrant); 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* --- Content Area & Transitions --- */
+        .content-display {
+            min-height: 280px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 3rem;
+            flex-grow: 1; 
+            
+            /* --- NEW: The "Frosted Glass Well" (Soft Phased Splotch) --- */
+            background: radial-gradient(ellipse at center, rgba(140, 175, 110, 0.25) 0%, rgba(162, 197, 121, 0.1) 60%, transparent 85%); 
+            background-color: transparent; /* Removed solid base to blend softly */
+            border: none; /* Removed harsh edges completely */
+            border-radius: 20px;
+            box-shadow: none; /* Removed shadow to eliminate the boxy feel */
+            
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .quote-text {
+            font-size: 2.75rem; 
+            font-weight: 600;
+            color: var(--matcha-darker); 
+            line-height: 1.3;
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, filter var(--transition-speed) ease;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0px);
+            z-index: 2;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8); /* Helps text lift off the light background */
+        }
+
+        .quote-text.fading-out {
+            opacity: 0;
+            transform: translateY(-15px) scale(0.95);
+            filter: blur(8px);
+        }
+
+        .quote-text.fading-in {
+            opacity: 0;
+            transform: translateY(15px) scale(1.05);
+            filter: blur(8px);
+        }
+
+        /* --- Controls & Buttons --- */
+        .controls {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 60px;
+        }
+
+        .btn {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem; /* INCREASED: Fatter, bolder text */
+            cursor: pointer;
+            border: none;
+            border-radius: 60px; /* INCREASED radius for fatter button */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: var(--matcha-vibrant);
+            color: #FFFFFF; 
+            padding: 1.5rem 4.5rem; /* INCREASED: Much fatter and wider clickable area */
+            box-shadow: 0 8px 25px var(--matcha-glow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            transition: left 0.6s ease;
+            z-index: -1;
+        }
+
+        .btn-primary:hover {
+            background-color: #688f47; 
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(121, 163, 84, 0.6);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .btn-icon {
+            background-color: transparent;
+            color: var(--pebble-gray);
+            padding: 1rem; /* INCREASED padding */
+            border: 2px solid var(--pebble-gray);
+            border-radius: 50%;
+            position: absolute;
+            right: 0;
+            background-color: rgba(255,255,255,0.5); /* subtle backdrop */
+        }
+
+        .btn-icon svg {
+            width: 32px; /* INCREASED: from 28px */
+            height: 32px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--terracotta);
+            color: var(--terracotta);
+            background-color: rgba(255,255,255,0.9);
+        }
+
+        .btn-icon.saved {
+            color: var(--terracotta);
+            border-color: var(--terracotta);
+            background-color: rgba(255,255,255,0.9);
+            animation: heartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes heartPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-icon.saved svg {
+            fill: var(--terracotta);
+        }
+
+        /* --- Sparkle Animation Elements (Button click) --- */
+        .sparkle-particle {
+            position: fixed;
+            pointer-events: none;
+            font-family: 'Outfit', monospace;
+            font-weight: 700;
+            animation: sparkleAnim 0.8s forwards ease-out;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 0 8px currentColor;
+        }
+
+        @keyframes sparkleAnim {
+            0% { transform: scale(0.5) translate(0, 0); opacity: 1; }
+            100% { transform: scale(1.2) var(--end-transform); opacity: 0; }
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 2.5rem 2rem 3.5rem 2rem;
+            }
+            header .app-title { font-size: 2.4rem; }
+            .quote-text { font-size: 2.2rem; }
+            .content-display { padding: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 2rem 1.5rem 2.5rem 1.5rem;
+                border-radius: 20px;
+            }
+            header .app-title { font-size: 2rem; }
+            .quote-text { font-size: 1.6rem; }
+            .btn { font-size: 1.25rem; }
+            .btn-primary {
+                width: 100%;
+                margin-bottom: 4rem; 
+                padding: 1.25rem 2rem;
+            }
+            .btn-primary svg { width: 26px; height: 26px; }
+            .btn-icon {
+                bottom: -3.5rem;
+                right: calc(50% - 32px); 
+            }
+            .controls { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="app-container" aria-labelledby="main-heading">
+        <header>
+            <h1 id="main-heading" class="app-title">Witty Compliment Joker</h1>
+            <p class="app-subtitle">Your Daily Dose of Compliment Toast</p>
+        </header>
+
+        <section class="content-display" id="content-box" aria-live="polite" aria-atomic="true">
+            <p id="quote-container" class="quote-text">Click below to clear those daily woes!</p>
+        </section>
+
+        <section class="controls" aria-label="Generator Controls">
+            <button id="btn-generate" class="btn btn-primary" aria-label="Generate new tech quote">
+                In Need of a Compliment?
+                <!-- Scaled up icon to match fatter button -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 32px; height: 32px; margin-left: 12px;">
+                    <path fill-rule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.625 2.625 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.625 2.625 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5zM16.5 15a.75.75 0 01.712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 010 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 01-1.422 0l-.395-1.183a1.5 1.5 0 00-.948-.948l-1.183-.395a.75.75 0 010-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0116.5 15z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            
+            <button id="btn-save" class="btn btn-icon" aria-label="Save this quote" aria-pressed="false">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+            </button>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const quoteContainer = document.getElementById('quote-container');
+            const contentBox = document.getElementById('content-box');
+            const generateBtn = document.getElementById('btn-generate');
+            const saveBtn = document.getElementById('btn-save');
+            let previousIndex = -1;
+
+            // --- Pond/Water & Code Swirl Logic ---
+            let lastRippleTime = 0;
+            const rippleThrottle = 100; // Limits how often ripples spawn while moving mouse
+            const cyberSymbols = ['0', '1', '{', '}', '</>', 'λ', '≈', '✨'];
+            const matrixChars = ['日', 'ﾊ', 'ﾐ', 'ﾋ', 'ｰ', 'ｳ', 'ｼ', 'ﾅ', 'ﾓ', 'ﾆ', 'ｻ', 'ﾜ', 'ﾂ', 'ｵ', 'ﾘ', 'ｱ', 'ﾎ', 'ﾃ', 'ﾏ', 'ｹ', 'ﾒ', 'ｴ', 'ｶ', 'ｷ', 'ﾑ', 'ﾕ', 'ﾗ', 'ｾ', 'ﾈ', 'ｽ', 'ﾀ', 'ﾇ', 'ﾍ'];
+            const codeSnippets = [
+                'def init():', 'public static void main', 'int main(void)', 'console.log()', 
+                'import sys', 'sudo rm -rf /', 'SELECT * FROM', '<div class="zen">', 
+                '0xDEADBEEF', 'var_dump()', 'System.out.println()', 'yield state'
+            ];
+
+            const createPondEffect = (x, y, isClick = false, isForeground = false) => {
+                const now = Date.now();
+                if (!isClick && now - lastRippleTime < rippleThrottle) return;
+                lastRippleTime = now;
+
+                // 1. Create the Water Ripple
+                const ripple = document.createElement('div');
+                ripple.classList.add('water-ripple');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.style.zIndex = isForeground ? '10' : '-2'; // Pop out over the card if foreground
+                
+                // Emphasize the ripple heavily if it's a click
+                if (isClick) {
+                    ripple.style.borderWidth = '6px';
+                    ripple.style.borderColor = isForeground ? 'rgba(162, 197, 121, 0.6)' : 'rgba(121, 163, 84, 0.8)';
+                    ripple.style.animationDuration = '2.5s';
+                    ripple.style.boxShadow = isForeground 
+                        ? '0 0 20px rgba(162, 197, 121, 0.4), inset 0 0 20px rgba(162, 197, 121, 0.4)' 
+                        : '0 0 20px rgba(121, 163, 84, 0.5), inset 0 0 20px rgba(121, 163, 84, 0.5)';
+                }
+                
+                document.body.appendChild(ripple);
+                setTimeout(() => ripple.remove(), isClick ? 2500 : 2000);
+
+                // 2. Create the Code Swirls floating on the water
+                const numSwirls = isClick ? 10 : 2; 
+                
+                for(let i = 0; i < numSwirls; i++) {
+                    const swirl = document.createElement('div');
+                    swirl.classList.add('code-swirl');
+                    swirl.style.zIndex = isForeground ? '11' : '-2'; // Pop out if foreground
+                    
+                    if (isClick) {
+                        // Mix of snippets, matrix chars, and symbols for click
+                        const allClickSymbols = [...codeSnippets, ...matrixChars, ...cyberSymbols];
+                        swirl.textContent = allClickSymbols[Math.floor(Math.random() * allClickSymbols.length)];
+                        swirl.style.color = isForeground ? 'rgba(43, 69, 34, 0.6)' : 'rgba(43, 69, 34, 0.9)'; 
+                        swirl.style.fontSize = `${20 + Math.random() * 14}px`; 
+                        swirl.style.fontWeight = '800';
+                    } else {
+                        swirl.textContent = cyberSymbols[Math.floor(Math.random() * cyberSymbols.length)];
+                        swirl.style.fontSize = `${18 + Math.random() * 6}px`; 
+                    }
+
+                    swirl.style.left = `${x}px`;
+                    swirl.style.top = `${y}px`;
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = (isClick ? 80 : 40) + Math.random() * (isClick ? 100 : 60); 
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    const rot = (Math.random() - 0.5) * 360; 
+                    
+                    swirl.style.setProperty('--end-transform', `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px))`);
+                    swirl.style.setProperty('--end-rotation', `${rot}deg`);
+
+                    document.body.appendChild(swirl);
+                    setTimeout(() => swirl.remove(), 2500);
+                }
+            };
+
+            // Track mouse movement for subtle trailing ripples
+            document.addEventListener('mousemove', (e) => {
+                createPondEffect(e.clientX, e.clientY, false);
+            });
+
+            // Track background clicks for large splash ripples
+            document.addEventListener('click', (e) => {
+                // Don't trigger pond effect if clicking inside the main app card
+                if (!e.target.closest('.app-container')) {
+                    createPondEffect(e.clientX, e.clientY, true);
+                }
+            });
+
+            // --- Dummy Content API (Hardcoded Array) ---
+            const techContent = [
+                // Developers / Full-Stack / Web Apps
+                "Your code is so clean, it doesn't even need a garbage collector. 🍃",
+                "Are you a CSS file? Because you give my life style. ✨",
+                "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
+                "You are a 10 out of 10. In binary, that's a 2, but in my heart, you're a 100. 💻",
+                "Your logic is flawless. You must have been compiled with zero warnings. ✅",
+                "I'd love to pause my event loop just to spend time with you. ⏱️",
+                "You handle exceptions in life better than a robust try-catch block. 🛡️",
+                "Are you an API? Because you always return exactly what I need. 🌐",
+                "You're the missing semicolon to my complex JavaScript function. ;",
+                "Your GitHub commit history is greener than a spring meadow. 🌱",
+                "You refactor my bad days into pure, optimized joy. 🚀",
+                "You are the root div to my React application. ⚛️",
+                "If you were a framework, you'd be the most loved one on Stack Overflow. 📈",
+                "You render my life's UI in perfectly steady 60 frames per second. 🎮",
+                
+                // Cloud Engineers / DevSecOps
+                "You scale my heart like a perfectly tuned Kubernetes cluster. ☸️",
+                "Your infrastructure as code is a literal masterpiece. 🏗️",
+                "You’re highly available across all my availability zones. ☁️",
+                "Our connection is like a VPC: secure, private, and seamlessly routed. 🔒",
+                "You bring CI/CD to my life: Continuous Inspiration & Constant Delight. 🔄",
+                "You handle my load balancing effortlessly without ever dropping a request. ⚖️",
+                "Like a serverless function, you're incredibly efficient and pure magic. ⚡",
+                "You spin up joy faster than a Docker container on Alpine Linux. 🐳",
+                "If my heart were an S3 bucket, you'd be the only one with public read access. 🪣",
+                
+                // Data Science / AI / ML / Prompt Engineering
+                "Your neural network must be deep, because you recognize all my patterns. 🧠",
+                "You minimize my loss function and maximize my accuracy. 📉",
+                "Are you an LLM? Because your contextual understanding is off the charts! 🤖",
+                "Your prompts are so sharp, they don't even need few-shot examples. 🎯",
+                "You're the principal component of my happiness variance. 📊",
+                "Your data pipelines flow smoother than a fresh cup of artisan coffee. ☕",
+                "You must be a reinforcement learning agent, because you keep getting better. 🏆",
+                "No hallucinations here, you are genuinely amazing. 🌟",
+                "You overfit my heart, but I don't need regularization. ❤️",
+                "You cluster my scattered thoughts into perfect k-means of clarity. 🧩",
+                
+                // CyberSec / InfoSec / Ethical Hackers
+                "You bypassed my firewall and got root access to my heart. 🗝️",
+                "Your security posture is absolutely impeccable. 🛡️",
+                "Are you an ethical hacker? Because you just found the exploit to my affection. 💻",
+                "Our bond is like a zero-trust network: highly valued and rigorously authenticated. 🕵️",
+                "You patch my vulnerabilities before they even become CVEs. 🩹",
+                "You sanitize my inputs and prevent all my emotional SQL injections. 💉",
+                "You're the only payload I'd gladly let execute in my environment. 💥",
+                "Even the best SIEM couldn't alert me to how fast I'd fall for your code. 🚨",
+                "You pivot through my network of friends effortlessly. 🕸️",
+                
+                // GRC / DFIR / Malware Analysts / Threat Hunters / IT Legal
+                "You are fully compliant with all my standards of excellence. 📋",
+                "Your risk assessments are always spot on, bringing perfect mitigation. ⚖️",
+                "You forensically extracted the best parts of my day. 🔬",
+                "You reverse-engineered my bad mood into pure joy. 🔄",
+                "You hunt down my negative thoughts like a tier-one threat hunter. 🏹",
+                "You safely sandbox my stress and analyze it without letting it spread. 📦",
+                "Your incident response time to my bad jokes is incredibly fast. ⏱️",
+                "You found the root cause of my happiness in the registry. 🔍",
+                "Your Terms of Service are the only ones I'd actually read. 📝",
+                
+                // Cryptography
+                "My love for you is end-to-end encrypted with a 4096-bit RSA key. 🔑",
+                "Your hashing algorithms are completely collision-free. 🛡️",
+                "You generated a perfect cryptographic nonce that can't be replayed. 🎲",
+                "Our connection is signed with a certificate of ultimate trust. 📜",
+                
+                // Network Architects
+                "You route my packets straight to happiness with zero hops. 🛣️",
+                "Our connection has zero latency, zero jitter, and infinite bandwidth. 📶",
+                "You configure my emotional BGP routing with perfect peering. 🌍",
+                "You're the default gateway to all my positive traffic. 🚪",
+                "Your QoS policies prioritize my joy above all other traffic. 🚦",
+                
+                // Help-desk / IT Support
+                "You always know exactly how to turn my day off and on again. 🔌",
+                "You resolve my life's tickets faster than an automated script. 🎫",
+                "You're my favorite first-line responder to any problem. 🚑",
+                "You remote-desktop into my mind and fix everything instantly. 🖥️",
+                "You have the admin rights to my heart. 👑",
+                
+                // Robotics & Hardware
+                "Your inverse kinematics are perfectly calculated for a hug. 🦾",
+                "You short-circuit my servos in the absolute best way. 🤖",
+                "Your sensors are perfectly calibrated to my emotional state. 📡",
+                "You solder my broken pieces back together with perfect precision. 🔬",
+                "Your battery life for dealing with complex problems is endless. 🔋",
+                
+                // Data Engineers
+                "You ETL my raw stress into transformed, actionable happiness. 🔄",
+                "Your data warehouse is organized better than my entire life. 🏢",
+                "You run real-time streaming pipelines of pure positivity. 🌊",
+                "You partition my problems so they query blazingly fast. ⚡",
+                
+                // CAD / 3D Printing Enthusiasts
+                "You slice my problems perfectly and print joy layer by layer. 🖨️",
+                "Your designs render flawlessly in the viewport of my mind. 🧊",
+                "Your extrusion rate is perfectly calibrated for absolute success. 🎯",
+                "You have no overhangs—you are fully supported in everything you do. 🏗️",
+                "You revolve around my origin axis like a perfectly constrained sketch. 📐",
+                
+                // Blockchain / Web3 / Crypto
+                "Our bond is immutable, decentralized, and verified on the blockchain. 🔗",
+                "Your energy is completely unstoppable and censorship-resistant. ⚡",
+                "You're the genesis block of my new positive mindset. 🧊",
+                "I'd HODL you through any bear market. 📈",
+                "Your proof-of-work is undeniable and your value is staking high. 💎",
+                "You are the most valuable non-fungible asset I know. 🖼️",
+                "Your smart contracts execute flawlessly every single time. 📜",
+                
+                // AR / VR / Spatial Web
+                "You bring high-res joy into my spatial reality. 🥽",
+                "Your framerate is locked at 144Hz—smooth and breathtaking. 🕶️",
+                "You augment my reality with pure, unfiltered happiness. 🌟",
+                "My field of view is completely captivated by your brilliance. 🔭",
+                
+                // Tech Gadget Lovers / Gamers / SaaS
+                "You're the ultimate premium tier of human beings—no subscription needed. 🥇",
+                "You have better features than the latest flagship smartphone. 📱",
+                "Your haptic feedback hits right in the feels. 📳",
+                "You carry my entire team and secure the payload effortlessly. 🎮",
+                "You unlocked the platinum trophy in being an awesome person. 🏆",
+                "Your user experience is frictionless and an absolute delight. ✨",
+                "You're the mechanical keyboard of people: tactile, satisfying, and high quality. ⌨️",
+                "If you were a SaaS product, your churn rate would be zero. 📉",
+                "You're the perfectly balanced skill tree I always wanted. 🌳",
+                "You have the best RGB lighting—you just glow from the inside out. 🌈",
+                
+                // Bonus Round
+                "You debug my thoughts and compile my dreams. 💭",
+                "You're the 'sudo' to my permissions—you make everything happen. 🔑",
+                "You are undeniably a senior engineer in the architecture of life. 🏛️",
+                "You parse my unstructured data into something beautiful. 📜",
+                "Your cache hit ratio is 100%—you always know what I need. 🎯",
+                "You are my favorite easter egg in the simulation of life. 🥚",
+                "Your uptime is 99.999% and you never require maintenance mode. 🟢",
+                "You are the master branch of my repository. 🌳",
+                "Your vibe checks pass all unit tests. ✔️",
+                "You're the absolute best node in this entire network. 🌍"
+            ];
+
+            const generateContent = () => {
+                let randomIndex;
+                do {
+                    randomIndex = Math.floor(Math.random() * techContent.length);
+                } while (randomIndex === previousIndex && techContent.length > 1);
+                
+                previousIndex = randomIndex;
+                return techContent[randomIndex];
+            };
+
+            const createButtonSparkles = (e) => {
+                if (!e) return;
+                const button = e.currentTarget;
+                const rect = button.getBoundingClientRect();
+                
+                const colors = ['#79A354', '#A2C579', '#FFFFFF', '#466D35'];
+                const cyberSymbols = ['0', '1', '{ }', '</>', '✨', '⚡'];
+                
+                for (let i = 0; i < 8; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle-particle');
+                    
+                    const startX = rect.left + (Math.random() * rect.width);
+                    const startY = rect.top + (Math.random() * rect.height);
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 50 + Math.random() * 70; // Slightly larger blast radius for fatter button
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    
+                    const size = 14 + Math.random() * 12;
+                    
+                    sparkle.textContent = cyberSymbols[Math.floor(Math.random() * cyberSymbols.length)];
+                    sparkle.style.fontSize = `${size}px`;
+                    sparkle.style.left = `${startX}px`;
+                    sparkle.style.top = `${startY}px`;
+                    sparkle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    sparkle.style.setProperty('--end-transform', `translate(${tx}px, ${ty}px)`);
+                    
+                    document.body.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 800);
+                }
+            };
+
+            const updateUI = (e) => {
+                if (e) createButtonSparkles(e);
+                
+                // Trigger the pond/code splash effect directly from the center of the text box
+                if (contentBox) {
+                    const boxRect = contentBox.getBoundingClientRect();
+                    const centerX = boxRect.left + boxRect.width / 2;
+                    const centerY = boxRect.top + boxRect.height / 2;
+                    createPondEffect(centerX, centerY, true, true); // Added 'true' flag to force foreground z-index
+                }
+                
+                quoteContainer.classList.add('fading-out');
+                generateBtn.disabled = true;
+
+                setTimeout(() => {
+                    quoteContainer.textContent = generateContent();
+                    
+                    saveBtn.classList.remove('saved');
+                    saveBtn.setAttribute('aria-pressed', 'false');
+
+                    quoteContainer.classList.remove('fading-out');
+                    quoteContainer.classList.add('fading-in');
+                    
+                    void quoteContainer.offsetWidth; 
+
+                    quoteContainer.classList.remove('fading-in');
+                    generateBtn.disabled = false;
+                }, 400); 
+            };
+
+            // --- Event Listeners ---
+            generateBtn.addEventListener('click', updateUI);
+
+            saveBtn.addEventListener('click', () => {
+                const isSaved = saveBtn.classList.toggle('saved');
+                saveBtn.setAttribute('aria-pressed', isSaved.toString());
+            });
+        });
+    </script>
+</body>
+</html>
