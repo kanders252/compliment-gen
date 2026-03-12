@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Witty Compliment Joker</title>
     
-    <!-- Google Fonts: Outfit (Headings) & DM Sans (Body) -->
+    <!-- Favicon for GitHub Pages & Modern Browsers -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
@@ -31,10 +35,10 @@
         }
 
         /* --- Global Reset & Typography --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
 
         body {
@@ -58,7 +62,10 @@
         body::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0;
             background-image: radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px);
             background-size: 24px 24px;
             z-index: -1;
@@ -78,8 +85,16 @@
         }
 
         @keyframes rippleAnim {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0.9; border-width: 4px; }
-            100% { transform: translate(-50%, -50%) scale(8); opacity: 0; border-width: 1px; }
+            0% { 
+                transform: translate(-50%, -50%) scale(0); 
+                opacity: 0.9; 
+                border-width: 4px; 
+            }
+            100% { 
+                transform: translate(-50%, -50%) scale(8); 
+                opacity: 0; 
+                border-width: 1px; 
+            }
         }
 
         .code-swirl {
@@ -96,8 +111,14 @@
         }
 
         @keyframes swirlAnim {
-            0% { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(0.5); }
-            100% { opacity: 0; transform: var(--end-transform) rotate(var(--end-rotation)) scale(1.5); }
+            0% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) rotate(0deg) scale(0.5); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: var(--end-transform) rotate(var(--end-rotation)) scale(1.5); 
+            }
         }
 
         h1, h2, h3 {
@@ -120,7 +141,7 @@
             flex-direction: column;
             gap: 1.5rem;
             z-index: 1;
-            position: relative; /* Context for absolute playing cards */
+            position: relative;
         }
 
         .app-container {
@@ -137,16 +158,16 @@
             flex-direction: column;
             gap: 1.5rem; 
             position: relative;
-            z-index: 5; /* Keep above the playing cards */
+            z-index: 5;
         }
 
         /* Cyber Flair: "System Online" Status Dot */
         .app-container::before {
             content: '';
             position: absolute;
-            top: 1.5rem;
+            top: 1.5rem; 
             right: 1.5rem;
-            width: 8px;
+            width: 8px; 
             height: 8px;
             background-color: var(--matcha-vibrant);
             border-radius: 50%;
@@ -158,8 +179,8 @@
         .card-decoration {
             position: absolute;
             top: 50%;
-            width: 160px;
-            height: 240px;
+            width: 180px; 
+            height: 270px; 
             background-color: #ffffff;
             border-radius: 12px;
             border: 2px solid var(--pebble-gray);
@@ -167,7 +188,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1; /* Behind app-container (z-index:5) */
+            z-index: 1; 
             pointer-events: none;
             font-family: 'DM Sans', sans-serif;
             font-weight: 700;
@@ -178,7 +199,10 @@
         .card-decoration::before {
             content: '';
             position: absolute;
-            top: 8px; left: 8px; right: 8px; bottom: 8px;
+            top: 8px; 
+            left: 8px; 
+            right: 8px; 
+            bottom: 8px;
             border: 1px solid rgba(0,0,0,0.1);
             border-radius: 6px;
         }
@@ -188,27 +212,35 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             line-height: 1.1;
             letter-spacing: 2px;
         }
 
-        .corner-top { top: 12px; left: 14px; }
-        .corner-bottom { bottom: 12px; right: 14px; transform: rotate(180deg); }
+        .corner-top { 
+            top: 12px; 
+            left: 14px; 
+        }
+        
+        .corner-bottom { 
+            bottom: 12px; 
+            right: 14px; 
+            transform: rotate(180deg); 
+        }
         
         .card-center-icon {
-            width: 85px;
-            height: 85px;
+            width: 95px;
+            height: 95px;
         }
 
         .left-card {
-            left: -75px;
+            left: -90px;
             transform: translateY(-50%) rotate(-15deg);
             color: var(--matcha-dark);
         }
         
         .right-card {
-            right: -75px;
+            right: -90px;
             transform: translateY(-50%) rotate(15deg);
             color: var(--terracotta);
         }
@@ -217,19 +249,20 @@
         .animate-draw-left {
             animation: drawLeftAnim 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
+        
         .animate-draw-right {
             animation: drawRightAnim 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         @keyframes drawLeftAnim {
             0% { transform: translateY(-50%) rotate(-15deg); }
-            50% { transform: translateY(-60%) translateX(-50px) rotate(-25deg) scale(1.05); }
+            50% { transform: translateY(-60%) translateX(-60px) rotate(-25deg) scale(1.05); }
             100% { transform: translateY(-50%) rotate(-15deg); }
         }
 
         @keyframes drawRightAnim {
             0% { transform: translateY(-50%) rotate(15deg); }
-            50% { transform: translateY(-60%) translateX(50px) rotate(25deg) scale(1.05); }
+            50% { transform: translateY(-60%) translateX(60px) rotate(25deg) scale(1.05); }
             100% { transform: translateY(-50%) rotate(15deg); }
         }
 
@@ -257,9 +290,9 @@
 
         /* Specific fix to allow the SVG icon to share the title gradient */
         .title-joker-icon {
-            width: 48px;
-            height: 48px;
-            margin-left: 12px;
+            width: 54px;
+            height: 54px;
+            margin-left: 14px;
             filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.4));
         }
 
@@ -274,7 +307,7 @@
 
         /* --- Content Area & Transitions --- */
         .content-display {
-            min-height: 500px; 
+            min-height: 520px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -370,8 +403,10 @@
         .btn::before {
             content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
+            top: 0; 
+            left: -100%;
+            width: 100%; 
+            height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
             transition: left 0.6s ease;
             z-index: -1;
@@ -395,15 +430,22 @@
             color: #FFFFFF; 
             box-shadow: 0 8px 25px var(--matcha-glow);
         }
-        .btn-compliment:hover { background-color: #688f47; box-shadow: 0 12px 30px rgba(121, 163, 84, 0.6); }
+        
+        .btn-compliment:hover { 
+            background-color: #688f47; 
+            box-shadow: 0 12px 30px rgba(121, 163, 84, 0.6); 
+        }
 
         .btn-joke {
             background-color: var(--terracotta);
             color: #FFFFFF;
             box-shadow: 0 8px 25px var(--terracotta-glow);
         }
-        .btn-joke:hover { background-color: var(--terracotta-dark); box-shadow: 0 12px 30px rgba(224, 122, 95, 0.6); }
-
+        
+        .btn-joke:hover { 
+            background-color: var(--terracotta-dark); 
+            box-shadow: 0 12px 30px rgba(224, 122, 95, 0.6); 
+        }
 
         /* --- Sparkle Animation Elements --- */
         .sparkle-particle {
@@ -420,39 +462,85 @@
         }
 
         @keyframes sparkleAnim {
-            0% { transform: scale(0.5) translate(0, 0); opacity: 1; }
-            100% { transform: scale(1.2) var(--end-transform); opacity: 0; }
+            0% { 
+                transform: scale(0.5) translate(0, 0); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: scale(1.2) var(--end-transform); 
+                opacity: 0; 
+            }
         }
 
         /* --- Responsive Adjustments --- */
         @media (max-width: 950px) {
-            .left-card { left: -25px; }
-            .right-card { right: -25px; }
+            .left-card { 
+                left: -30px; 
+            }
+            .right-card { 
+                right: -30px; 
+            }
         }
 
         @media (max-width: 768px) {
-            .app-container { padding: 2.5rem 2rem 3rem 2rem; }
-            header .app-title { font-size: 2.4rem; }
-            .quote-text { font-size: 2.2rem; }
-            .punchline-text { font-size: 1.8rem; }
-            .content-display { padding: 1.5rem; }
-            .btn { font-size: 1.25rem; padding: 1.25rem 1.5rem; }
+            .app-container { 
+                padding: 2.5rem 2rem 3rem 2rem; 
+            }
+            header .app-title { 
+                font-size: 2.4rem; 
+            }
+            .quote-text { 
+                font-size: 2.2rem; 
+            }
+            .punchline-text { 
+                font-size: 1.8rem; 
+            }
+            .content-display { 
+                min-height: 400px; 
+                padding: 1.5rem; 
+            }
+            .btn { 
+                font-size: 1.25rem; 
+                padding: 1.25rem 1.5rem; 
+            }
             /* Hide cards on small screens to prevent overlap/scroll issues */
-            .card-decoration { opacity: 0.3; transform: translateY(-50%) scale(0.8); }
+            .card-decoration { 
+                opacity: 0.3; 
+                transform: translateY(-50%) scale(0.7); 
+            }
         }
 
         @media (max-width: 600px) {
-            .controls { flex-direction: column; gap: 1rem; }
-            .btn { width: 100%; }
-            .card-decoration { display: none; }
+            .controls { 
+                flex-direction: column; 
+                gap: 1rem; 
+            }
+            .btn { 
+                width: 100%; 
+            }
+            .card-decoration { 
+                display: none; 
+            }
         }
 
         @media (max-width: 480px) {
-            .app-container { padding: 2rem 1.5rem 2.5rem 1.5rem; border-radius: 20px; }
-            header .app-title { font-size: 2rem; }
-            .title-joker-icon { width: 36px; height: 36px; }
-            .quote-text { font-size: 1.6rem; }
-            .punchline-text { font-size: 1.4rem; }
+            .app-container { 
+                padding: 2rem 1.5rem 2.5rem 1.5rem; 
+                border-radius: 20px; 
+            }
+            header .app-title { 
+                font-size: 2rem; 
+            }
+            .title-joker-icon { 
+                width: 36px; 
+                height: 36px; 
+            }
+            .quote-text { 
+                font-size: 1.6rem; 
+            }
+            .punchline-text { 
+                font-size: 1.4rem; 
+            }
         }
     </style>
 </head>
@@ -596,6 +684,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
+            // --- DOM Elements ---
             const quoteWrapper = document.getElementById('quote-container-wrapper');
             const quoteContainer = document.getElementById('quote-container');
             const contentBox = document.getElementById('content-box');
@@ -604,12 +693,13 @@
             const leftCard = document.querySelector('.left-card');
             const rightCard = document.querySelector('.right-card');
             
+            // --- State Variables ---
             let previousIndex = -1;
             let punchlineTimer; 
-
-            // --- Pond/Water & Code Swirl Logic ---
             let lastRippleTime = 0;
             const rippleThrottle = 100;
+            
+            // --- Assets for Animations ---
             const cyberSymbols = ['0', '1', '{', '}', '</>', 'λ', '≈', '✨'];
             const matrixChars = ['日', 'ﾊ', 'ﾐ', 'ﾋ', 'ｰ', 'ｳ', 'ｼ', 'ﾅ', 'ﾓ', 'ﾆ', 'ｻ', 'ﾜ', 'ﾂ', 'ｵ', 'ﾘ', 'ｱ', 'ﾎ', 'ﾃ', 'ﾏ', 'ｹ', 'ﾒ', 'ｴ', 'ｶ', 'ｷ', 'ﾑ', 'ﾕ', 'ﾗ', 'ｾ', 'ﾈ', 'ｽ', 'ﾀ', 'ﾇ', 'ﾍ'];
             const codeSnippets = [
@@ -618,76 +708,9 @@
                 '0xDEADBEEF', 'var_dump()', 'System.out.println()', 'yield state'
             ];
 
-            const createPondEffect = (x, y, isClick = false, isForeground = false) => {
-                const now = Date.now();
-                if (!isClick && now - lastRippleTime < rippleThrottle) return;
-                lastRippleTime = now;
-
-                const ripple = document.createElement('div');
-                ripple.classList.add('water-ripple');
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-                ripple.style.zIndex = isForeground ? '10' : '-2';
-                
-                if (isClick) {
-                    ripple.style.borderWidth = '6px';
-                    ripple.style.borderColor = isForeground ? 'rgba(162, 197, 121, 0.6)' : 'rgba(121, 163, 84, 0.8)';
-                    ripple.style.animationDuration = '2.5s';
-                    ripple.style.boxShadow = isForeground 
-                        ? '0 0 20px rgba(162, 197, 121, 0.4), inset 0 0 20px rgba(162, 197, 121, 0.4)' 
-                        : '0 0 20px rgba(121, 163, 84, 0.5), inset 0 0 20px rgba(121, 163, 84, 0.5)';
-                }
-                
-                document.body.appendChild(ripple);
-                setTimeout(() => ripple.remove(), isClick ? 2500 : 2000);
-
-                const numSwirls = isClick ? 10 : 2; 
-                
-                for(let i = 0; i < numSwirls; i++) {
-                    const swirl = document.createElement('div');
-                    swirl.classList.add('code-swirl');
-                    swirl.style.zIndex = isForeground ? '11' : '-2';
-                    
-                    if (isClick) {
-                        const allClickSymbols = [...codeSnippets, ...matrixChars, ...cyberSymbols];
-                        swirl.textContent = allClickSymbols[Math.floor(Math.random() * allClickSymbols.length)];
-                        swirl.style.color = isForeground ? 'rgba(43, 69, 34, 0.6)' : 'rgba(43, 69, 34, 0.9)'; 
-                        swirl.style.fontSize = `${20 + Math.random() * 14}px`; 
-                        swirl.style.fontWeight = '800';
-                    } else {
-                        swirl.textContent = cyberSymbols[Math.floor(Math.random() * cyberSymbols.length)];
-                        swirl.style.fontSize = `${18 + Math.random() * 6}px`; 
-                    }
-
-                    swirl.style.left = `${x}px`;
-                    swirl.style.top = `${y}px`;
-                    
-                    const angle = Math.random() * Math.PI * 2;
-                    const distance = (isClick ? 80 : 40) + Math.random() * (isClick ? 100 : 60); 
-                    const tx = Math.cos(angle) * distance;
-                    const ty = Math.sin(angle) * distance;
-                    const rot = (Math.random() - 0.5) * 360; 
-                    
-                    swirl.style.setProperty('--end-transform', `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px))`);
-                    swirl.style.setProperty('--end-rotation', `${rot}deg`);
-
-                    document.body.appendChild(swirl);
-                    setTimeout(() => swirl.remove(), 2500);
-                }
-            };
-
-            document.addEventListener('mousemove', (e) => {
-                createPondEffect(e.clientX, e.clientY, false);
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.app-container')) {
-                    createPondEffect(e.clientX, e.clientY, true);
-                }
-            });
-
-            // --- DATA ARRAYS ---
+            // --- DATA ARRAYS (100 Items Each) ---
             const compliments = [
+                // Developers & Full Stack
                 "Your code is so clean, it doesn't even need a garbage collector. 🍃",
                 "Are you a CSS file? Because you give my life style. ✨",
                 "Your logic is flawless. You must have been compiled with zero warnings. ✅",
@@ -708,6 +731,8 @@
                 "You're the missing semicolon to my complex JavaScript function. ;",
                 "You're the kind of engineer who actually reads the entire documentation. 📚",
                 "Your patience with legacy code is truly saint-like. 😇",
+
+                // Cloud & DevOps
                 "You scale my heart like a perfectly tuned Kubernetes cluster. ☸️",
                 "Your infrastructure as code is a literal masterpiece. 🏗️",
                 "You bring CI/CD to my life: Continuous Inspiration & Constant Delight. 🔄",
@@ -723,6 +748,8 @@
                 "You're more robust than a Kubernetes cluster with auto-scaling enabled. 📈",
                 "Your Terraform scripts apply without a single error. 🌍",
                 "You are highly available across all my availability zones. 🌐",
+
+                // InfoSec, SOC & Threat Hunting
                 "You bypass my firewall and get root access to my heart. 🗝️",
                 "Your security posture is absolutely impeccable. 🛡️",
                 "My love for you is end-to-end encrypted with a 4096-bit RSA key. 🔑",
@@ -743,6 +770,8 @@
                 "You're the default deny rule to all my stress and anxiety. 🚫",
                 "You are the master key in a world full of complex encryption. 🗝️",
                 "You filter out the noise better than a finely tuned IPS. 🎛️",
+
+                // GRC, IT Legal & Auditing
                 "You are fully compliant with all my standards of excellence. 📋",
                 "Your risk assessments are always spot on, bringing perfect mitigation. ⚖️",
                 "Your Terms of Service are the only ones I'd actually read. 📝",
@@ -753,6 +782,8 @@
                 "You understand the business impact of joy better than anyone else. 💼",
                 "You bring perfect compliance to an otherwise chaotic network. 📑",
                 "Your third-party risk is practically zero. 🤝",
+
+                // DFIR & Malware Analysis
                 "You forensically extracted the best parts of my day. 🔬",
                 "You reverse-engineered my bad mood into pure joy. 🔄",
                 "You safely sandbox my stress and analyze it without letting it spread. 📦",
@@ -763,6 +794,8 @@
                 "Your memory dumps reveal nothing but pure brilliance. 🧠",
                 "You trace the execution flow of my thoughts effortlessly. 🛤️",
                 "You unpack my obfuscated feelings and understand the real me. 🔓",
+
+                // AI, ML & Data Science
                 "Your neural network must be deep, because you recognize all my patterns. 🧠",
                 "You minimize my loss function and maximize my accuracy. 📉",
                 "Are you an LLM? Because your contextual understanding is off the charts! 🤖",
@@ -778,6 +811,8 @@
                 "You ETL my raw stress into transformed, actionable happiness. 🔄",
                 "Your data warehouse is organized better than my entire life. 🏢",
                 "You run real-time streaming pipelines of pure positivity. 🌊",
+
+                // Networking & Infrastructure
                 "You route my packets straight to happiness with zero hops. 🛣️",
                 "You're the DNS to my internet: without you, I wouldn't know where to go. 🗺️",
                 "If brilliance was a network port, you'd be 443: completely secure and trusted. 🔒",
@@ -791,6 +826,7 @@
             ];
 
             const jokes = [
+                // Developers & Coding
                 { setup: "Why do programmers prefer dark mode?", punchline: "Because light attracts bugs. 🐛" },
                 { setup: "Why do Java developers wear glasses?", punchline: "Because they can't C#. 👓" },
                 { setup: "How do you comfort a JavaScript bug?", punchline: "You console it. 🫂" },
@@ -802,7 +838,7 @@
                 { setup: "Why did the developer go broke?", punchline: "Because they used up all their cache. 💸" },
                 { setup: "There are 10 types of people in the world:", punchline: "Those who understand binary, and those who don't. 🔟" },
                 { setup: "What's the object-oriented way to become wealthy?", punchline: "Inheritance. 💰" },
-                { setup: "Why do programmers always mix up Halloween and Christmas?", punchline: "Because Oct 31 equals Dec 25. 🎃🎄" },
+                { setup: "Why do programmers always mix up Halloween and Christmas?", punchline: "Because Oct 31 equals Dec 25. 🎃" },
                 { setup: "Why did the programmer quit his job?", punchline: "Because he didn't get arrays. 🥁" },
                 { setup: "A SQL query goes into a bar, walks up to two tables and asks...", punchline: "Can I join you? 📊" },
                 { setup: "Why did the database administrator leave his wife?", punchline: "She had one-to-many relationships. 💔" },
@@ -811,9 +847,11 @@
                 { setup: "Why do hardware engineers hate software updates?", punchline: "Because you can't fix it with a soldering iron. 🔌" },
                 { setup: "Why was the computer cold?", punchline: "It left its Windows open. 🪟" },
                 { setup: "What do you call a computer that sings?", punchline: "A Dell. 🎤" },
+
+                // InfoSec, Pentesting & SOC
                 { setup: "Why did the CISO ban all geometry books?", punchline: "Too many attack vectors. 📐" },
                 { setup: "What's the SOC analyst's favorite drink?", punchline: "Anything with high alert-itude. ☕" },
-                { setup: "Why did the penetration tester get locked out of their house?", punchline: "They forgot to test the backdoor. 🚪" },
+                { setup: "Why did the penetration tester get locked out?", punchline: "They forgot to test the backdoor. 🚪" },
                 { setup: "What did the zero trust model say to the user?", punchline: "I don't know you, and I don't care to. 🛑" },
                 { setup: "How does a cybersecurity expert propose?", punchline: "With a 2048-bit ring. 💍" },
                 { setup: "Why do security analysts hate the sun?", punchline: "Too many zero-days. ☀️" },
@@ -831,6 +869,8 @@
                 { setup: "Why did the token expire?", punchline: "It ran out of session. ⏳" },
                 { setup: "Why did the security guard stare at the router?", punchline: "He was performing packet inspection. 🕵️" },
                 { setup: "How do you spot a junior pentester?", punchline: "They run Nessus and call it a day. 🖨️" },
+
+                // GRC, Auditing & DFIR
                 { setup: "Why did the auditor cross the road?", punchline: "Because it was explicitly outlined in the risk assessment framework. 📋" },
                 { setup: "How does a forensic analyst (DFIR) cheer up?", punchline: "They look at the bright side of the disk. 💾" },
                 { setup: "Why did the compliance officer bring a ruler to work?", punchline: "To measure the scope of the audit. 📏" },
@@ -841,6 +881,8 @@
                 { setup: "Why did the active directory so tired?", punchline: "It had too many group policies to enforce. 📁" },
                 { setup: "Why did the threat hunter bring a flashlight?", punchline: "To look into the dark web. 🔦" },
                 { setup: "How does an incident responder sleep at night?", punchline: "On an on-call mattress. 🛏️" },
+
+                // Cloud, Networking & Infrastructure
                 { setup: "Why did the router break up with the modem?", punchline: "There was no connection. 🔌" },
                 { setup: "Why do cloud engineers love autumn?", punchline: "Because of all the dropping packets... wait, no, the serverless environment. ☁️" },
                 { setup: "What's a cloud architect's favorite candy?", punchline: "Skittles. Taste the rainbow of AWS services. 🌈" },
@@ -861,6 +903,8 @@
                 { setup: "Why did the CSPM tool go to the doctor?", punchline: "It had misconfigurations in its joints. 🏥" },
                 { setup: "Why did the cloud instance meditate?", punchline: "To reach a state of serverless peace. 🧘" },
                 { setup: "What is a sysadmin's favorite movie?", punchline: "The Lord of the Pings. 🧝‍♂️" },
+
+                // AI, ML & Data Science
                 { setup: "Why did the neural network cross the road?", punchline: "To optimize the path on the other side. 🛣️" },
                 { setup: "What does a data scientist wear to a wedding?", punchline: "An algorithm. 👔" },
                 { setup: "Why do AI models make terrible politicians?", punchline: "They're too transparent about their biases. 🤖" },
@@ -880,15 +924,91 @@
                 { setup: "What do you call a lazy data structure?", punchline: "A sluggish array. 🐌" },
                 { setup: "Why did the boolean get married?", punchline: "Because it found its true match. 💍" },
                 { setup: "Why do statisticians make good detectives?", punchline: "They always look for the standard deviation. 🕵️‍♀️" },
-                { setup: "What did the prompt engineer say to the bartender?", punchline: "Give me a drink, concisely, in the style of Hemingway. 🍸" }
+                { setup: "What did the prompt engineer say to the bartender?", punchline: "Give me a drink, concisely, in the style of Hemingway. 🍸" },
+
+                // Additional Tech / IT Support
+                { setup: "Why did the database go to the store?", punchline: "To get some more tables. 🛒" },
+                { setup: "What is an AI's favorite sport?", punchline: "Neural-surfing. 🏄‍♂️" },
+                { setup: "Why did the link go to the doctor?", punchline: "It was broken. 🩺" },
+                { setup: "What do you call a computer that’s a pig?", punchline: "A Ham-drive. 🐷" },
+                { setup: "Why did the software go to the movie?", punchline: "To see the script. 🎬" },
+                { setup: "What is a developer's favorite snack?", punchline: "Cookies. 🍪" },
+                { setup: "Why did the mouse go to the doctor?", punchline: "It had a bad clicker. 🖱️" },
+                { setup: "Why did the computer go to the dance?", punchline: "To find its better half-byte. 💃" },
+                { setup: "What do you call a computer that’s a duck?", punchline: "A Quack-er. 🦆" },
+                { setup: "Why did the file go to the gym?", punchline: "To get compressed. 💪" }
             ];
 
+            // --- Helper Functions ---
+            
             const getRandomItem = (array, lastIdx) => {
                 let randomIndex;
                 do {
                     randomIndex = Math.floor(Math.random() * array.length);
                 } while (randomIndex === lastIdx && array.length > 1);
+                
                 return { item: array[randomIndex], index: randomIndex };
+            };
+
+            const createPondEffect = (x, y, isClick = false, isForeground = false) => {
+                const now = Date.now();
+                
+                if (!isClick && now - lastRippleTime < rippleThrottle) return;
+                lastRippleTime = now;
+                
+                // Create Ripple
+                const ripple = document.createElement('div');
+                ripple.classList.add('water-ripple');
+                ripple.style.left = `${x}px`; 
+                ripple.style.top = `${y}px`;
+                ripple.style.zIndex = isForeground ? '10' : '-2';
+                
+                if (isClick) {
+                    ripple.style.borderWidth = '6px';
+                    ripple.style.borderColor = isForeground ? 'rgba(162, 197, 121, 0.6)' : 'rgba(121, 163, 84, 0.8)';
+                    ripple.style.animationDuration = '2.5s';
+                    ripple.style.boxShadow = isForeground 
+                        ? '0 0 20px rgba(162, 197, 121, 0.4), inset 0 0 20px rgba(162, 197, 121, 0.4)' 
+                        : '0 0 20px rgba(121, 163, 84, 0.5), inset 0 0 20px rgba(121, 163, 84, 0.5)';
+                }
+                
+                document.body.appendChild(ripple);
+                setTimeout(() => ripple.remove(), isClick ? 2500 : 2000);
+                
+                // Create Swirls
+                const numSwirls = isClick ? 10 : 2;
+                
+                for(let i = 0; i < numSwirls; i++) {
+                    const swirl = document.createElement('div');
+                    swirl.classList.add('code-swirl');
+                    swirl.style.zIndex = isForeground ? '11' : '-2';
+                    
+                    if (isClick) {
+                        const allSyms = [...codeSnippets, ...matrixChars, ...cyberSymbols];
+                        swirl.textContent = allSyms[Math.floor(Math.random() * allSyms.length)];
+                        swirl.style.color = isForeground ? 'rgba(43, 69, 34, 0.6)' : 'rgba(43, 69, 34, 0.9)';
+                        swirl.style.fontSize = `${20 + Math.random() * 14}px`;
+                        swirl.style.fontWeight = '800';
+                    } else {
+                        swirl.textContent = cyberSymbols[Math.floor(Math.random() * cyberSymbols.length)];
+                        swirl.style.fontSize = `${18 + Math.random() * 6}px`;
+                    }
+                    
+                    swirl.style.left = `${x}px`; 
+                    swirl.style.top = `${y}px`;
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = (isClick ? 80 : 40) + Math.random() * (isClick ? 100 : 60);
+                    const tx = Math.cos(angle) * dist; 
+                    const ty = Math.sin(angle) * dist;
+                    const rot = (Math.random() - 0.5) * 360;
+                    
+                    swirl.style.setProperty('--end-transform', `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px))`);
+                    swirl.style.setProperty('--end-rotation', `${rot}deg`);
+                    
+                    document.body.appendChild(swirl);
+                    setTimeout(() => swirl.remove(), 2500);
+                }
             };
 
             const createButtonSparkles = (button, isJoke = false) => {
@@ -897,8 +1017,6 @@
                 const colors = isJoke 
                     ? ['#E07A5F', '#C86A50', '#FFFFFF', '#F2A693'] 
                     : ['#79A354', '#A2C579', '#FFFFFF', '#466D35'];
-                
-                const cyberSymbols = ['0', '1', '{ }', '</>', '✨', '⚡'];
                 
                 for (let i = 0; i < 8; i++) {
                     const sparkle = document.createElement('div');
@@ -911,7 +1029,6 @@
                     const distance = 50 + Math.random() * 70; 
                     const tx = Math.cos(angle) * distance;
                     const ty = Math.sin(angle) * distance;
-                    
                     const size = 14 + Math.random() * 12;
                     
                     sparkle.textContent = cyberSymbols[Math.floor(Math.random() * cyberSymbols.length)];
@@ -982,6 +1099,7 @@
                     quoteWrapper.classList.remove('fading-out');
                     quoteWrapper.classList.add('fading-in');
                     
+                    // Trigger reflow
                     void quoteWrapper.offsetWidth; 
 
                     quoteWrapper.classList.remove('fading-in');
@@ -991,8 +1109,23 @@
             };
 
             // --- Event Listeners ---
-            btnCompliment.addEventListener('click', (e) => updateUI('compliment', e.currentTarget));
-            btnJoke.addEventListener('click', (e) => updateUI('joke', e.currentTarget));
+            document.addEventListener('mousemove', (e) => {
+                createPondEffect(e.clientX, e.clientY, false);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.app-container')) {
+                    createPondEffect(e.clientX, e.clientY, true);
+                }
+            });
+
+            btnCompliment.addEventListener('click', (e) => {
+                updateUI('compliment', e.currentTarget);
+            });
+            
+            btnJoke.addEventListener('click', (e) => {
+                updateUI('joke', e.currentTarget);
+            });
         });
     </script>
 </body>
