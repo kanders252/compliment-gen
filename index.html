@@ -273,6 +273,28 @@
             100% { transform: translateY(-50%) rotate(15deg) scale(var(--c-scale)); }
         }
 
+        /* Idle Animations */
+        @keyframes subtleWiggle {
+            0%, 100% { transform: translateY(-50%) rotate(var(--base-rotation)) scale(var(--c-scale)); }
+            50% { transform: translateY(-50%) rotate(calc(var(--base-rotation) + 3deg)) scale(calc(var(--c-scale) * 1.02)); }
+        }
+
+        .left-card.idle-wiggle {
+            --base-rotation: -15deg;
+            animation: subtleWiggle 3s ease-in-out infinite;
+        }
+
+        .right-card.idle-wiggle {
+            --base-rotation: 15deg;
+            animation: subtleWiggle 3s ease-in-out infinite;
+        }
+
+        .sparkle-particle.idle-sparkle {
+            animation-duration: 1.5s;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
         /* --- Title & Subtitle Redesign --- */
         header {
             text-align: center;
@@ -407,6 +429,7 @@
             gap: 1.5rem;
             width: 100%;
             justify-content: center;
+            flex-wrap: wrap; /* Allows share button to flow nicely */
         }
 
         .btn {
@@ -476,6 +499,22 @@
             box-shadow: 0 12px 30px rgba(224, 122, 95, 0.6); 
         }
 
+        .btn-share {
+            background-color: var(--pebble-gray);
+            color: var(--deep-slate);
+            box-shadow: 0 8px 25px rgba(210, 214, 211, 0.4);
+            flex-basis: 100%;
+            max-width: 350px;
+            margin-top: 0.5rem;
+            padding: 1.2rem 2rem;
+            font-size: 1.25rem;
+        }
+
+        .btn-share:hover { 
+            background-color: #BFC3C0; 
+            box-shadow: 0 12px 30px rgba(210, 214, 211, 0.6); 
+        }
+
         /* --- Sparkle Animation Elements --- */
         .sparkle-particle {
             position: fixed;
@@ -521,6 +560,7 @@
             .punchline-text { font-size: 1.8rem; }
             .content-display { min-height: 400px; padding: 1.5rem; }
             .btn { font-size: 1.25rem; padding: 1.25rem 1.5rem; }
+            .btn-share { margin-top: 0; }
             
             /* Tucked and Scaled Cards */
             .card-decoration { --c-scale: 0.7; --c-offset: 40px; opacity: 0.6; }
@@ -530,7 +570,7 @@
 
         @media (max-width: 600px) {
             .controls { flex-direction: column; gap: 1rem; }
-            .btn { width: 100%; }
+            .btn { width: 100%; max-width: none; }
             
             /* Tucked and Scaled Cards */
             .card-decoration { --c-scale: 0.5; --c-offset: 30px; opacity: 0.5; }
@@ -684,6 +724,13 @@
                     <path d="M45 62 Q50 68 55 62" stroke="#E07A5F" stroke-width="4" fill="none" stroke-linecap="round"/>
                 </svg>
             </button>
+            
+            <button id="btn-share" class="btn btn-share" aria-label="Share current quote">
+                Share this Vibe?
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 28px; height: 28px; margin-left: 10px;">
+                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                </svg>
+            </button>
         </section>
     </div>
 
@@ -696,12 +743,16 @@
             const contentBox = document.getElementById('content-box');
             const btnCompliment = document.getElementById('btn-compliment');
             const btnJoke = document.getElementById('btn-joke');
+            const btnShare = document.getElementById('btn-share');
             const leftCard = document.querySelector('.left-card');
             const rightCard = document.querySelector('.right-card');
             
             // --- State Variables ---
             let punchlineTimer; 
             let idleTimer; 
+            let sparkleInterval;
+            const idleTimeout = 45000;
+            let lastRippleTime = 0; 
             
             // Shuffle Bags for Exhaustive Drawing
             let remainingCompliments = [];
@@ -952,8 +1003,156 @@
                 return targetArray[nextIndex];
             };
 
+            // --- Sound Effects (Web Audio API) ---
+            let audioCtx;
+            const initAudio = () => {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            };
+
+            const playWhoosh = () => {
+                try {
+                    initAudio();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(200, audioCtx.currentTime); 
+                    osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                    
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                    
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } catch(e) {} // Fail silently if audio blocked
+            };
+
+            const playSparkle = () => {
+                try {
+                    initAudio();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime); 
+                    osc.frequency.linearRampToValueAtTime(1200, audioCtx.currentTime + 0.2);
+                    
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                    
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.2);
+                } catch(e) {}
+            };
+
+            // --- Share & Toast UI ---
+            const showToast = (message) => {
+                const toast = document.createElement('div');
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '20px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.background = 'rgba(43, 69, 34, 0.9)';
+                toast.style.color = '#fff';
+                toast.style.padding = '12px 24px';
+                toast.style.borderRadius = '40px';
+                toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                toast.style.zIndex = '1000';
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                toast.style.fontFamily = "'DM Sans', sans-serif";
+                toast.style.fontWeight = "700";
+                
+                document.body.appendChild(toast);
+                
+                // Force reflow for transition
+                void toast.offsetWidth;
+                toast.style.opacity = '1';
+                
+                setTimeout(() => { 
+                    toast.style.opacity = '0'; 
+                    setTimeout(() => toast.remove(), 300); 
+                }, 2000);
+            };
+
+            btnShare.addEventListener('click', () => {
+                let shareText = '';
+                
+                // Get clean text avoiding internal spaces and old defaults
+                const textNodes = Array.from(quoteContainer.childNodes).filter(node => node.nodeType === Node.TEXT_NODE);
+                shareText += textNodes.map(node => node.textContent).join('').trim();
+                
+                const punchlineEl = quoteContainer.querySelector('.punchline-text');
+                if (punchlineEl) {
+                    shareText += ' ' + punchlineEl.textContent.trim();
+                }
+                
+                if (shareText === 'Click below to clear those daily woes!') {
+                    showToast('Nothing to share yet! Generate a vibe first. ✨');
+                    return;
+                }
+
+                // Fallback copying mechanism for Canvas/iFrames
+                const textarea = document.createElement('textarea');
+                textarea.value = shareText;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Vibe copied to clipboard! 📋');
+                } catch (err) {
+                    showToast('Oops, copy failed – try manually! 😅');
+                }
+                document.body.removeChild(textarea);
+                
+                createButtonSparkles(btnShare, false); 
+                resetIdleTimer();
+            });
+
             // --- Idle Reset Feature ---
-            const resetToIdle = () => {
+            const createIdleSparkles = () => {
+                const cardRects = [leftCard.getBoundingClientRect(), rightCard.getBoundingClientRect()];
+                const colors = ['#79A354', '#E07A5F', '#FFFFFF'];
+                
+                for (let i = 0; i < 3; i++) { 
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle-particle', 'idle-sparkle');
+                    
+                    const card = cardRects[Math.floor(Math.random() * 2)];
+                    const startX = card.left + (Math.random() * card.width);
+                    const startY = card.top + (Math.random() * card.height);
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = 20 + Math.random() * 40;
+                    const tx = Math.cos(angle) * dist;
+                    const ty = Math.sin(angle) * dist;
+                    
+                    sparkle.textContent = cyberSymbols[Math.floor(Math.random() * cyberSymbols.length)];
+                    sparkle.style.left = `${startX}px`;
+                    sparkle.style.top = `${startY}px`;
+                    sparkle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    sparkle.style.setProperty('--end-transform', `translate(${tx}px, ${ty}px)`);
+                    
+                    document.body.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 1200);
+                }
+            };
+
+            const resetToIdleText = () => {
+                if (quoteContainer.textContent === 'Click below to clear those daily woes!') return;
+                
                 quoteWrapper.classList.add('fading-out');
                 setTimeout(() => {
                     quoteContainer.innerHTML = 'Click below to clear those daily woes!';
@@ -963,15 +1162,41 @@
                 }, 400);
             };
 
+            const startIdleAnimation = () => {
+                leftCard.classList.add('idle-wiggle');
+                rightCard.classList.add('idle-wiggle');
+                resetToIdleText();
+                
+                sparkleInterval = setInterval(() => {
+                    if (!document.hidden) { 
+                        createIdleSparkles();
+                    }
+                }, 3000); 
+            };
+
+            const stopIdleAnimation = () => {
+                leftCard.classList.remove('idle-wiggle');
+                rightCard.classList.remove('idle-wiggle');
+                clearInterval(sparkleInterval);
+            };
+
             const resetIdleTimer = () => {
                 clearTimeout(idleTimer);
-                // Reset to default text after 45 seconds of inactivity
-                idleTimer = setTimeout(resetToIdle, 45000); 
+                stopIdleAnimation();
+                idleTimer = setTimeout(startIdleAnimation, idleTimeout);
             };
 
             // --- Visual Effects & Interactivity ---
             const createPondEffect = (x, y, isClick = false, isForeground = false) => {
-                // Create Ripple
+                const now = Date.now();
+                
+                // Performance check for coarse pointer
+                const isMobile = window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 768;
+                const currentThrottle = isMobile ? 150 : 100;
+                
+                if (!isClick && now - lastRippleTime < currentThrottle) return;
+                lastRippleTime = now;
+                
                 const ripple = document.createElement('div');
                 ripple.classList.add('water-ripple');
                 ripple.style.left = `${x}px`; 
@@ -990,10 +1215,6 @@
                 document.body.appendChild(ripple);
                 setTimeout(() => ripple.remove(), isClick ? 2500 : 2000);
                 
-                // Performance check for particle count
-                const isMobile = window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 768;
-                
-                // Create Swirls - Reduce particle count significantly on mobile to save battery
                 const numSwirls = isClick ? (isMobile ? 5 : 10) : (isMobile ? 1 : 2);
                 
                 for(let i = 0; i < numSwirls; i++) {
@@ -1074,6 +1295,7 @@
             };
 
             const updateUI = (type, buttonElement) => {
+                playWhoosh();
                 clearTimeout(punchlineTimer);
                 resetIdleTimer();
                 
@@ -1113,6 +1335,7 @@
                         
                         punchlineTimer = setTimeout(() => {
                             punchlineEl.classList.add('show');
+                            playSparkle(); // Audio cue
                         }, punchlineDelay);
                     }
 
@@ -1122,9 +1345,12 @@
                     // Trigger reflow
                     void quoteWrapper.offsetWidth; 
 
-                    quoteWrapper.classList.remove('fading-in');
-                    btnCompliment.disabled = false;
-                    btnJoke.disabled = false;
+                    setTimeout(() => { 
+                        quoteWrapper.classList.remove('fading-in'); 
+                        btnCompliment.disabled = false; 
+                        btnJoke.disabled = false; 
+                        if (type === 'compliment') playSparkle(); // Audio cue for compliment
+                    }, 400);
                 }, 400); 
             };
 
@@ -1143,9 +1369,8 @@
                 createPondEffect(x, y, false);
             };
 
-            // --- Event Listeners ---
+            // --- Global Event Listeners ---
             document.addEventListener('mousemove', throttledPond, { passive: true });
-            
             document.addEventListener('touchmove', (e) => throttledPond(e, true), { passive: true });
 
             document.addEventListener('click', (e) => {
@@ -1154,13 +1379,14 @@
                 }
             });
 
-            btnCompliment.addEventListener('click', (e) => {
-                updateUI('compliment', e.currentTarget);
+            // Resets idle timer on generic interactions
+            [btnCompliment, btnJoke, btnShare, contentBox].forEach(el => {
+                el.addEventListener('click', resetIdleTimer);
+                el.addEventListener('touchstart', resetIdleTimer, { passive: true });
             });
-            
-            btnJoke.addEventListener('click', (e) => {
-                updateUI('joke', e.currentTarget);
-            });
+
+            btnCompliment.addEventListener('click', (e) => updateUI('compliment', e.currentTarget));
+            btnJoke.addEventListener('click', (e) => updateUI('joke', e.currentTarget));
             
             // Start the idle timer on initial load
             resetIdleTimer();
