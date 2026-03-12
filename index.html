@@ -575,7 +575,7 @@
                 <span id="streak-counter" class="streak-counter" aria-live="polite">🔥 <span id="streak-days">0</span>-day streak</span>
             </div>
             
-            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <button id="theme-toggle" class="theme-toggle" role="button" aria-pressed="false" aria-label="Toggle dark mode">🌙</button>
         </header>
 
         <div class="card-decoration left-card" aria-hidden="true">
@@ -723,6 +723,61 @@
                 }
             };
             
+            // --- Share & Toast UI ---
+            const showToast = (message) => {
+                const toast = document.createElement('div');
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '20px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.background = 'rgba(43, 69, 34, 0.9)';
+                toast.style.color = '#fff';
+                toast.style.padding = '12px 24px';
+                toast.style.borderRadius = '40px';
+                toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                toast.style.zIndex = '100000';
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                toast.style.fontFamily = "'DM Sans', sans-serif";
+                toast.style.fontWeight = "700";
+                
+                document.body.appendChild(toast);
+                
+                void toast.offsetWidth; // Force reflow
+                toast.style.opacity = '1';
+                
+                setTimeout(() => { 
+                    toast.style.opacity = '0'; 
+                    setTimeout(() => toast.remove(), 300); 
+                }, 2000);
+            };
+
+            // --- Daily Streak Counter ---
+            const updateStreak = () => {
+                let lastVisit = localStorage.getItem('lastVisitDate');
+                let streak = parseInt(localStorage.getItem('streakCount') || '0');
+                const today = new Date().toDateString();
+
+                if (lastVisit === today) {
+                    // same day — do nothing
+                } else if (lastVisit === new Date(Date.now() - 86400000).toDateString()) {
+                    // visited yesterday, increment
+                    streak++;
+                    // Celebrate milestones!
+                    if (streak > 1 && streak % 5 === 0) {
+                        setTimeout(() => showToast(`🔥 ${streak}-day streak! You're on fire!`), 1000);
+                    }
+                } else {
+                    // missed a day (or first visit)
+                    streak = 1;
+                }
+                
+                localStorage.setItem('lastVisitDate', today);
+                localStorage.setItem('streakCount', streak);
+                streakCounter.textContent = streak;
+            };
+
             // --- Assets for Animations ---
             const cyberSymbols = ['0', '1', '{', '}', '</>', 'λ', '≈', '✨'];
             const matrixChars = ['日', 'ﾊ', 'ﾐ', 'ﾋ', 'ｰ', 'ｳ', 'ｼ', 'ﾅ', 'ﾓ', 'ﾆ', 'ｻ', 'ﾜ', 'ﾂ', 'ｵ', 'ﾘ', 'ｱ', 'ﾎ', 'ﾃ', 'ﾏ', 'ｹ', 'ﾒ', 'ｴ', 'ｶ', 'ｷ', 'ﾑ', 'ﾕ', 'ﾗ', 'ｾ', 'ﾈ', 'ｽ', 'ﾀ', 'ﾇ', 'ﾍ'];
@@ -1150,14 +1205,21 @@
                 updateFavoriteButtonState();
             };
 
+            const closeFavoritesModal = () => {
+                modal.classList.remove('show');
+                favSearch.value = '';
+                const items = document.querySelectorAll('.favorite-item');
+                items.forEach(item => item.style.display = 'flex');
+            };
+
             btnFavorite.addEventListener('click', toggleFavorite);
             btnViewFavs.addEventListener('click', () => { 
                 modal.classList.add('show'); 
                 favSearch.value = ''; // Reset search on open
                 renderFavorites(); 
             });
-            closeModal.addEventListener('click', () => modal.classList.remove('show'));
-            modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('show'); });
+            closeModal.addEventListener('click', closeFavoritesModal);
+            modal.addEventListener('click', (e) => { if(e.target === modal) closeFavoritesModal(); });
 
             // --- Favorites Search ---
             favSearch.addEventListener('input', () => {
@@ -1180,36 +1242,6 @@
                 URL.revokeObjectURL(url);
                 showToast('Favorites exported! 💾');
             });
-
-            // --- Share & Toast UI ---
-            const showToast = (message) => {
-                const toast = document.createElement('div');
-                toast.textContent = message;
-                toast.style.position = 'fixed';
-                toast.style.bottom = '20px';
-                toast.style.left = '50%';
-                toast.style.transform = 'translateX(-50%)';
-                toast.style.background = 'rgba(43, 69, 34, 0.9)';
-                toast.style.color = '#fff';
-                toast.style.padding = '12px 24px';
-                toast.style.borderRadius = '40px';
-                toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-                toast.style.zIndex = '100000';
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.3s ease';
-                toast.style.fontFamily = "'DM Sans', sans-serif";
-                toast.style.fontWeight = "700";
-                
-                document.body.appendChild(toast);
-                
-                void toast.offsetWidth; // Force reflow
-                toast.style.opacity = '1';
-                
-                setTimeout(() => { 
-                    toast.style.opacity = '0'; 
-                    setTimeout(() => toast.remove(), 300); 
-                }, 2000);
-            };
 
             btnShare.addEventListener('click', async () => {
                 if (!currentFullQuote || currentFullQuote === 'Click below to clear those daily woes!') {
@@ -1434,6 +1466,7 @@
                 
                 createButtonSparkles(buttonElement, type === 'joke');
                 triggerCardAnimation(type);
+                updateStreak(); // Update streak logic on interaction
                 
                 if (contentBox) {
                     const boxRect = contentBox.getBoundingClientRect();
@@ -1460,7 +1493,7 @@
                     } else {
                         // It's a joke object
                         quoteContainer.textContent = contentData.setup;
-                        currentFullQuote = contentData.setup + " " + contentData.punchline;
+                        currentFullQuote = contentData.setup; // Safe initial quote (prevents spoilers in voice/share)
                         
                         const punchlineEl = document.createElement('span');
                         punchlineEl.className = 'punchline-text';
@@ -1473,6 +1506,8 @@
                         
                         punchlineTimer = setTimeout(() => {
                             punchlineEl.classList.add('show');
+                            currentFullQuote = contentData.setup + " " + contentData.punchline; // Now safe to set full quote
+                            updateFavoriteButtonState(); // Update heart correctly after punchline
                             playSparkle(); // Audio cue
                             btnSpeak.style.display = 'inline-flex';
                         }, punchlineDelay);
@@ -1494,30 +1529,12 @@
                 }, 400); 
             };
 
-            // --- Daily Streak Counter ---
-            const updateStreak = () => {
-                let lastVisit = localStorage.getItem('lastVisitDate');
-                let streak = parseInt(localStorage.getItem('streakCount') || '0');
-                const today = new Date().toDateString();
-
-                if (lastVisit === today) {
-                    // same day — do nothing
-                } else if (lastVisit === new Date(Date.now() - 86400000).toDateString()) {
-                    // visited yesterday, increment
-                    streak++;
-                } else {
-                    // missed a day (or first visit)
-                    streak = 1;
-                }
-                
-                localStorage.setItem('lastVisitDate', today);
-                localStorage.setItem('streakCount', streak);
-                streakCounter.textContent = streak;
-            };
-
             // --- Dark Mode Toggle ---
             const isDark = localStorage.getItem('darkMode') === 'true';
-            if (isDark) document.body.classList.add('dark-mode');
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                themeToggle.setAttribute('aria-pressed', 'true');
+            }
             themeToggle.textContent = isDark ? '🌙' : '☀️';
 
             themeToggle.addEventListener('click', () => {
@@ -1525,6 +1542,7 @@
                 document.body.classList.toggle('dark-mode', nowDark);
                 localStorage.setItem('darkMode', nowDark);
                 themeToggle.textContent = nowDark ? '🌙' : '☀️';
+                themeToggle.setAttribute('aria-pressed', nowDark ? 'true' : 'false');
                 createButtonSparkles(themeToggle);
             });
 
@@ -1550,6 +1568,13 @@
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.app-container') && !e.target.closest('.favorites-modal') && !e.target.closest('.theme-toggle')) {
                     createPondEffect(e.clientX, e.clientY, true);
+                }
+            });
+
+            // Esc key listener for Modal
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('show')) {
+                    closeFavoritesModal();
                 }
             });
 
