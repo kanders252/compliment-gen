@@ -147,8 +147,12 @@
         .app-container {
             width: 100%;
             background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            /* GPU acceleration hint - helps Safari/WebKit */
+            transform: translateZ(0);
+            will-change: transform, backdrop-filter, opacity;
+            
             border: 1px solid rgba(255, 255, 255, 0.9);
             border-radius: 24px;
             padding: 2.5rem 3rem 3rem 3rem; 
@@ -341,10 +345,16 @@
             filter: blur(0px);
             z-index: 2;
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            
             /* Improved Mobile Typography Handling */
             overflow-wrap: break-word;
+            word-break: break-word;
             -webkit-hyphens: auto;
+            -ms-hyphens: auto;
             hyphens: auto;
+            hyphenate-limit-chars: 6 3 2;
+            hyphenate-limit-lines: 2;
+            hyphenate-limit-last: always;
         }
 
         .punchline-text {
@@ -357,10 +367,16 @@
             opacity: 0;
             transform: translateY(15px);
             transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            
             /* Improved Mobile Typography Handling */
             overflow-wrap: break-word;
+            word-break: break-word;
             -webkit-hyphens: auto;
+            -ms-hyphens: auto;
             hyphens: auto;
+            hyphenate-limit-chars: 6 3 2;
+            hyphenate-limit-lines: 2;
+            hyphenate-limit-last: always;
         }
 
         .punchline-text.show {
@@ -494,14 +510,12 @@
         @media (max-width: 768px) {
             .app-container { 
                 padding: 2.5rem 2rem 3rem 2rem; 
-                /* Performance fix: reduce blur on mobile to prevent flickering */
                 backdrop-filter: blur(12px);
                 -webkit-backdrop-filter: blur(12px);
             }
             header .app-title { font-size: 2.4rem; }
             .quote-text { 
                 font-size: 2.2rem; 
-                /* Performance fix: soften text shadow on mobile */
                 text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
             }
             .punchline-text { font-size: 1.8rem; }
@@ -687,10 +701,7 @@
             
             // --- State Variables ---
             let punchlineTimer; 
-            let lastRippleTime = 0;
-            const rippleThrottle = 100;
-            let isRippleScheduled = false; // Added for mousemove performance throttling
-            let idleTimer; // Added for idle state reset
+            let idleTimer; 
             
             // Shuffle Bags for Exhaustive Drawing
             let remainingCompliments = [];
@@ -960,17 +971,6 @@
 
             // --- Visual Effects & Interactivity ---
             const createPondEffect = (x, y, isClick = false, isForeground = false) => {
-                const now = Date.now();
-                
-                // Performance check: determine if user is on mobile/coarse pointer
-                const isMobile = window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 768;
-                
-                // Stricter throttle on mobile for performance
-                const currentThrottle = isMobile ? 150 : 100;
-                
-                if (!isClick && now - lastRippleTime < currentThrottle) return;
-                lastRippleTime = now;
-                
                 // Create Ripple
                 const ripple = document.createElement('div');
                 ripple.classList.add('water-ripple');
@@ -989,6 +989,9 @@
                 
                 document.body.appendChild(ripple);
                 setTimeout(() => ripple.remove(), isClick ? 2500 : 2000);
+                
+                // Performance check for particle count
+                const isMobile = window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 768;
                 
                 // Create Swirls - Reduce particle count significantly on mobile to save battery
                 const numSwirls = isClick ? (isMobile ? 5 : 10) : (isMobile ? 1 : 2);
@@ -1104,8 +1107,9 @@
                         punchlineEl.textContent = contentData.punchline;
                         quoteContainer.appendChild(punchlineEl);
                         
-                        // Mobile psychology timing: 1600ms on mobile, 2500ms on desktop
-                        const punchlineDelay = window.innerWidth <= 768 ? 1600 : 2500;
+                        // Adaptive mobile psychology timing
+                        const isMobileLike = window.innerWidth <= 768 || window.matchMedia("(pointer: coarse)").matches;
+                        const punchlineDelay = isMobileLike ? 1800 : 2500;
                         
                         punchlineTimer = setTimeout(() => {
                             punchlineEl.classList.add('show');
@@ -1124,16 +1128,25 @@
                 }, 400); 
             };
 
-            // --- Event Listeners with requestAnimationFrame throttling for Performance ---
-            document.addEventListener('mousemove', (e) => {
-                if (!isRippleScheduled) {
-                    requestAnimationFrame(() => {
-                        createPondEffect(e.clientX, e.clientY, false);
-                        isRippleScheduled = false;
-                    });
-                    isRippleScheduled = true;
-                }
-            });
+            // --- Throttled Interactions for Battery & Performance ---
+            let lastMoveTime = 0;
+            const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+            const moveThrottleMs = isCoarse ? 120 : 80;
+
+            const throttledPond = (e, isTouch = false) => {
+                const now = Date.now();
+                if (now - lastMoveTime < moveThrottleMs) return;
+                lastMoveTime = now;
+
+                const x = isTouch ? e.touches[0].clientX : e.clientX;
+                const y = isTouch ? e.touches[0].clientY : e.clientY;
+                createPondEffect(x, y, false);
+            };
+
+            // --- Event Listeners ---
+            document.addEventListener('mousemove', throttledPond, { passive: true });
+            
+            document.addEventListener('touchmove', (e) => throttledPond(e, true), { passive: true });
 
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.app-container')) {
