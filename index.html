@@ -177,6 +177,8 @@
 
         /* --- Playing Card Decorations --- */
         .card-decoration {
+            --c-scale: 1;
+            --c-offset: 60px;
             position: absolute;
             top: 50%;
             width: 180px; 
@@ -193,6 +195,7 @@
             font-family: 'DM Sans', sans-serif;
             font-weight: 700;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         /* Inner border for traditional card look */
@@ -235,13 +238,13 @@
 
         .left-card {
             left: -90px;
-            transform: translateY(-50%) rotate(-15deg);
+            transform: translateY(-50%) rotate(-15deg) scale(var(--c-scale));
             color: var(--matcha-dark);
         }
         
         .right-card {
             right: -90px;
-            transform: translateY(-50%) rotate(15deg);
+            transform: translateY(-50%) rotate(15deg) scale(var(--c-scale));
             color: var(--terracotta);
         }
 
@@ -255,15 +258,15 @@
         }
 
         @keyframes drawLeftAnim {
-            0% { transform: translateY(-50%) rotate(-15deg); }
-            50% { transform: translateY(-60%) translateX(-60px) rotate(-25deg) scale(1.05); }
-            100% { transform: translateY(-50%) rotate(-15deg); }
+            0% { transform: translateY(-50%) rotate(-15deg) scale(var(--c-scale)); }
+            50% { transform: translateY(-60%) translateX(calc(-1 * var(--c-offset))) rotate(-25deg) scale(calc(var(--c-scale) * 1.05)); }
+            100% { transform: translateY(-50%) rotate(-15deg) scale(var(--c-scale)); }
         }
 
         @keyframes drawRightAnim {
-            0% { transform: translateY(-50%) rotate(15deg); }
-            50% { transform: translateY(-60%) translateX(60px) rotate(25deg) scale(1.05); }
-            100% { transform: translateY(-50%) rotate(15deg); }
+            0% { transform: translateY(-50%) rotate(15deg) scale(var(--c-scale)); }
+            50% { transform: translateY(-60%) translateX(var(--c-offset)) rotate(25deg) scale(calc(var(--c-scale) * 1.05)); }
+            100% { transform: translateY(-50%) rotate(15deg) scale(var(--c-scale)); }
         }
 
         /* --- Title & Subtitle Redesign --- */
@@ -286,6 +289,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            flex-wrap: wrap; /* Allows wrapping on small mobile screens */
         }
 
         /* Specific fix to allow the SVG icon to share the title gradient */
@@ -472,75 +476,48 @@
             }
         }
 
-        /* --- Responsive Adjustments --- */
+        /* --- Responsive Adjustments & Scaling for Mobile --- */
         @media (max-width: 950px) {
-            .left-card { 
-                left: -30px; 
-            }
-            .right-card { 
-                right: -30px; 
-            }
+            .left-card { left: -30px; }
+            .right-card { right: -30px; }
         }
 
         @media (max-width: 768px) {
-            .app-container { 
-                padding: 2.5rem 2rem 3rem 2rem; 
-            }
-            header .app-title { 
-                font-size: 2.4rem; 
-            }
-            .quote-text { 
-                font-size: 2.2rem; 
-            }
-            .punchline-text { 
-                font-size: 1.8rem; 
-            }
-            .content-display { 
-                min-height: 400px; 
-                padding: 1.5rem; 
-            }
-            .btn { 
-                font-size: 1.25rem; 
-                padding: 1.25rem 1.5rem; 
-            }
-            /* Hide cards on small screens to prevent overlap/scroll issues */
-            .card-decoration { 
-                opacity: 0.3; 
-                transform: translateY(-50%) scale(0.7); 
-            }
+            .app-container { padding: 2.5rem 2rem 3rem 2rem; }
+            header .app-title { font-size: 2.4rem; }
+            .quote-text { font-size: 2.2rem; }
+            .punchline-text { font-size: 1.8rem; }
+            .content-display { min-height: 400px; padding: 1.5rem; }
+            .btn { font-size: 1.25rem; padding: 1.25rem 1.5rem; }
+            
+            /* Tucked and Scaled Cards */
+            .card-decoration { --c-scale: 0.7; --c-offset: 40px; opacity: 0.6; }
+            .left-card { left: -20px; }
+            .right-card { right: -20px; }
         }
 
         @media (max-width: 600px) {
-            .controls { 
-                flex-direction: column; 
-                gap: 1rem; 
-            }
-            .btn { 
-                width: 100%; 
-            }
-            .card-decoration { 
-                display: none; 
-            }
+            .controls { flex-direction: column; gap: 1rem; }
+            .btn { width: 100%; }
+            
+            /* Tucked and Scaled Cards */
+            .card-decoration { --c-scale: 0.5; --c-offset: 30px; opacity: 0.5; }
+            .left-card { left: -10px; }
+            .right-card { right: -10px; }
         }
 
         @media (max-width: 480px) {
-            .app-container { 
-                padding: 2rem 1.5rem 2.5rem 1.5rem; 
-                border-radius: 20px; 
-            }
-            header .app-title { 
-                font-size: 2rem; 
-            }
-            .title-joker-icon { 
-                width: 36px; 
-                height: 36px; 
-            }
-            .quote-text { 
-                font-size: 1.6rem; 
-            }
-            .punchline-text { 
-                font-size: 1.4rem; 
-            }
+            .app-container { padding: 2rem 1.5rem 2.5rem 1.5rem; border-radius: 20px; }
+            header .app-title { font-size: 2rem; }
+            .title-joker-icon { width: 36px; height: 36px; }
+            .quote-text { font-size: 1.6rem; }
+            .punchline-text { font-size: 1.4rem; }
+            .content-display { min-height: 350px; }
+            
+            /* Perfectly peeking cards on mobile */
+            .card-decoration { --c-scale: 0.4; --c-offset: 20px; opacity: 0.4; }
+            .left-card { left: -5px; }
+            .right-card { right: -5px; }
         }
     </style>
 </head>
@@ -587,7 +564,6 @@
             <div class="card-corner corner-top">
                 <span>J</span><span>O</span><span>K</span><span>E</span><span>R</span>
             </div>
-            <!-- Custom Jester Hat SVG matching your references -->
             <svg class="card-center-icon" viewBox="0 0 100 100" fill="currentColor">
                 <path d="M40 45 C30 35 15 35 10 45 C15 55 25 50 35 55 Z" />
                 <circle cx="10" cy="45" r="5" />
@@ -615,7 +591,6 @@
             <div class="card-corner corner-top">
                 <span>J</span><span>O</span><span>K</span><span>E</span><span>R</span>
             </div>
-            <!-- Custom Jester Hat SVG matching your references -->
             <svg class="card-center-icon" viewBox="0 0 100 100" fill="currentColor">
                 <path d="M40 45 C30 35 15 35 10 45 C15 55 25 50 35 55 Z" />
                 <circle cx="10" cy="45" r="5" />
@@ -657,7 +632,6 @@
             
             <button id="btn-joke" class="btn btn-joke" aria-label="Generate new tech joke">
                 Brighten your Day?
-                <!-- Joker Mask SVG perfectly matching the cards and title -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor" style="width: 32px; height: 32px; margin-left: 10px;">
                     <path d="M40 45 C30 35 15 35 10 45 C15 55 25 50 35 55 Z" />
                     <circle cx="10" cy="45" r="5" />
@@ -694,10 +668,13 @@
             const rightCard = document.querySelector('.right-card');
             
             // --- State Variables ---
-            let previousIndex = -1;
             let punchlineTimer; 
             let lastRippleTime = 0;
             const rippleThrottle = 100;
+            
+            // Shuffle Bags for Exhaustive Drawing
+            let remainingCompliments = [];
+            let remainingJokes = [];
             
             // --- Assets for Animations ---
             const cyberSymbols = ['0', '1', '{', '}', '</>', 'λ', '≈', '✨'];
@@ -710,7 +687,6 @@
 
             // --- DATA ARRAYS (100 Items Each) ---
             const compliments = [
-                // Developers & Full Stack
                 "Your code is so clean, it doesn't even need a garbage collector. 🍃",
                 "Are you a CSS file? Because you give my life style. ✨",
                 "Your logic is flawless. You must have been compiled with zero warnings. ✅",
@@ -731,8 +707,6 @@
                 "You're the missing semicolon to my complex JavaScript function. ;",
                 "You're the kind of engineer who actually reads the entire documentation. 📚",
                 "Your patience with legacy code is truly saint-like. 😇",
-
-                // Cloud & DevOps
                 "You scale my heart like a perfectly tuned Kubernetes cluster. ☸️",
                 "Your infrastructure as code is a literal masterpiece. 🏗️",
                 "You bring CI/CD to my life: Continuous Inspiration & Constant Delight. 🔄",
@@ -748,8 +722,6 @@
                 "You're more robust than a Kubernetes cluster with auto-scaling enabled. 📈",
                 "Your Terraform scripts apply without a single error. 🌍",
                 "You are highly available across all my availability zones. 🌐",
-
-                // InfoSec, SOC & Threat Hunting
                 "You bypass my firewall and get root access to my heart. 🗝️",
                 "Your security posture is absolutely impeccable. 🛡️",
                 "My love for you is end-to-end encrypted with a 4096-bit RSA key. 🔑",
@@ -770,8 +742,6 @@
                 "You're the default deny rule to all my stress and anxiety. 🚫",
                 "You are the master key in a world full of complex encryption. 🗝️",
                 "You filter out the noise better than a finely tuned IPS. 🎛️",
-
-                // GRC, IT Legal & Auditing
                 "You are fully compliant with all my standards of excellence. 📋",
                 "Your risk assessments are always spot on, bringing perfect mitigation. ⚖️",
                 "Your Terms of Service are the only ones I'd actually read. 📝",
@@ -782,8 +752,6 @@
                 "You understand the business impact of joy better than anyone else. 💼",
                 "You bring perfect compliance to an otherwise chaotic network. 📑",
                 "Your third-party risk is practically zero. 🤝",
-
-                // DFIR & Malware Analysis
                 "You forensically extracted the best parts of my day. 🔬",
                 "You reverse-engineered my bad mood into pure joy. 🔄",
                 "You safely sandbox my stress and analyze it without letting it spread. 📦",
@@ -794,8 +762,6 @@
                 "Your memory dumps reveal nothing but pure brilliance. 🧠",
                 "You trace the execution flow of my thoughts effortlessly. 🛤️",
                 "You unpack my obfuscated feelings and understand the real me. 🔓",
-
-                // AI, ML & Data Science
                 "Your neural network must be deep, because you recognize all my patterns. 🧠",
                 "You minimize my loss function and maximize my accuracy. 📉",
                 "Are you an LLM? Because your contextual understanding is off the charts! 🤖",
@@ -811,8 +777,6 @@
                 "You ETL my raw stress into transformed, actionable happiness. 🔄",
                 "Your data warehouse is organized better than my entire life. 🏢",
                 "You run real-time streaming pipelines of pure positivity. 🌊",
-
-                // Networking & Infrastructure
                 "You route my packets straight to happiness with zero hops. 🛣️",
                 "You're the DNS to my internet: without you, I wouldn't know where to go. 🗺️",
                 "If brilliance was a network port, you'd be 443: completely secure and trusted. 🔒",
@@ -826,7 +790,6 @@
             ];
 
             const jokes = [
-                // Developers & Coding
                 { setup: "Why do programmers prefer dark mode?", punchline: "Because light attracts bugs. 🐛" },
                 { setup: "Why do Java developers wear glasses?", punchline: "Because they can't C#. 👓" },
                 { setup: "How do you comfort a JavaScript bug?", punchline: "You console it. 🫂" },
@@ -847,8 +810,6 @@
                 { setup: "Why do hardware engineers hate software updates?", punchline: "Because you can't fix it with a soldering iron. 🔌" },
                 { setup: "Why was the computer cold?", punchline: "It left its Windows open. 🪟" },
                 { setup: "What do you call a computer that sings?", punchline: "A Dell. 🎤" },
-
-                // InfoSec, Pentesting & SOC
                 { setup: "Why did the CISO ban all geometry books?", punchline: "Too many attack vectors. 📐" },
                 { setup: "What's the SOC analyst's favorite drink?", punchline: "Anything with high alert-itude. ☕" },
                 { setup: "Why did the penetration tester get locked out?", punchline: "They forgot to test the backdoor. 🚪" },
@@ -869,8 +830,6 @@
                 { setup: "Why did the token expire?", punchline: "It ran out of session. ⏳" },
                 { setup: "Why did the security guard stare at the router?", punchline: "He was performing packet inspection. 🕵️" },
                 { setup: "How do you spot a junior pentester?", punchline: "They run Nessus and call it a day. 🖨️" },
-
-                // GRC, Auditing & DFIR
                 { setup: "Why did the auditor cross the road?", punchline: "Because it was explicitly outlined in the risk assessment framework. 📋" },
                 { setup: "How does a forensic analyst (DFIR) cheer up?", punchline: "They look at the bright side of the disk. 💾" },
                 { setup: "Why did the compliance officer bring a ruler to work?", punchline: "To measure the scope of the audit. 📏" },
@@ -881,8 +840,6 @@
                 { setup: "Why did the active directory so tired?", punchline: "It had too many group policies to enforce. 📁" },
                 { setup: "Why did the threat hunter bring a flashlight?", punchline: "To look into the dark web. 🔦" },
                 { setup: "How does an incident responder sleep at night?", punchline: "On an on-call mattress. 🛏️" },
-
-                // Cloud, Networking & Infrastructure
                 { setup: "Why did the router break up with the modem?", punchline: "There was no connection. 🔌" },
                 { setup: "Why do cloud engineers love autumn?", punchline: "Because of all the dropping packets... wait, no, the serverless environment. ☁️" },
                 { setup: "What's a cloud architect's favorite candy?", punchline: "Skittles. Taste the rainbow of AWS services. 🌈" },
@@ -903,8 +860,6 @@
                 { setup: "Why did the CSPM tool go to the doctor?", punchline: "It had misconfigurations in its joints. 🏥" },
                 { setup: "Why did the cloud instance meditate?", punchline: "To reach a state of serverless peace. 🧘" },
                 { setup: "What is a sysadmin's favorite movie?", punchline: "The Lord of the Pings. 🧝‍♂️" },
-
-                // AI, ML & Data Science
                 { setup: "Why did the neural network cross the road?", punchline: "To optimize the path on the other side. 🛣️" },
                 { setup: "What does a data scientist wear to a wedding?", punchline: "An algorithm. 👔" },
                 { setup: "Why do AI models make terrible politicians?", punchline: "They're too transparent about their biases. 🤖" },
@@ -925,8 +880,6 @@
                 { setup: "Why did the boolean get married?", punchline: "Because it found its true match. 💍" },
                 { setup: "Why do statisticians make good detectives?", punchline: "They always look for the standard deviation. 🕵️‍♀️" },
                 { setup: "What did the prompt engineer say to the bartender?", punchline: "Give me a drink, concisely, in the style of Hemingway. 🍸" },
-
-                // Additional Tech / IT Support
                 { setup: "Why did the database go to the store?", punchline: "To get some more tables. 🛒" },
                 { setup: "What is an AI's favorite sport?", punchline: "Neural-surfing. 🏄‍♂️" },
                 { setup: "Why did the link go to the doctor?", punchline: "It was broken. 🩺" },
@@ -939,17 +892,36 @@
                 { setup: "Why did the file go to the gym?", punchline: "To get compressed. 💪" }
             ];
 
-            // --- Helper Functions ---
-            
-            const getRandomItem = (array, lastIdx) => {
-                let randomIndex;
-                do {
-                    randomIndex = Math.floor(Math.random() * array.length);
-                } while (randomIndex === lastIdx && array.length > 1);
+            // --- Exhaustive Draw System (Shuffle Bag Logic) ---
+            const getNextItem = (type) => {
+                let targetArray, remainingArray;
                 
-                return { item: array[randomIndex], index: randomIndex };
+                if (type === 'compliment') {
+                    targetArray = compliments;
+                    remainingArray = remainingCompliments;
+                } else {
+                    targetArray = jokes;
+                    remainingArray = remainingJokes;
+                }
+
+                // If the bag is empty, fill it with all indices and shuffle!
+                if (remainingArray.length === 0) {
+                    for (let i = 0; i < targetArray.length; i++) {
+                        remainingArray.push(i);
+                    }
+                    // Fisher-Yates Shuffle
+                    for (let i = remainingArray.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [remainingArray[i], remainingArray[j]] = [remainingArray[j], remainingArray[i]];
+                    }
+                }
+
+                // Pop the last item from our shuffled bag
+                const nextIndex = remainingArray.pop();
+                return targetArray[nextIndex];
             };
 
+            // --- Visual Effects & Interactivity ---
             const createPondEffect = (x, y, isClick = false, isForeground = false) => {
                 const now = Date.now();
                 
@@ -1075,20 +1047,17 @@
                 setTimeout(() => {
                     quoteContainer.innerHTML = '';
                     
-                    let contentData;
+                    let contentData = getNextItem(type);
+                    
                     if (type === 'compliment') {
-                        contentData = getRandomItem(compliments, previousIndex);
-                        previousIndex = contentData.index;
-                        quoteContainer.textContent = contentData.item;
+                        quoteContainer.textContent = contentData;
                     } else {
-                        contentData = getRandomItem(jokes, previousIndex);
-                        previousIndex = contentData.index;
-                        
-                        quoteContainer.textContent = contentData.item.setup;
+                        // It's a joke object
+                        quoteContainer.textContent = contentData.setup;
                         
                         const punchlineEl = document.createElement('span');
                         punchlineEl.className = 'punchline-text';
-                        punchlineEl.textContent = contentData.item.punchline;
+                        punchlineEl.textContent = contentData.punchline;
                         quoteContainer.appendChild(punchlineEl);
                         
                         punchlineTimer = setTimeout(() => {
